@@ -1,0 +1,98 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Assets/GroundTile.tscn" type="PackedScene" id=1]
+[ext_resource path="res://RepulsionArea.gd" type="Script" id=2]
+[ext_resource path="res://LeafSpawner.gd" type="Script" id=3]
+[ext_resource path="res://CameraPivot.gd" type="Script" id=4]
+[ext_resource path="res://PlayerController.gd" type="Script" id=5]
+[ext_resource path="res://MapleLeaf.tscn" type="PackedScene" id=6]
+
+[sub_resource type="CapsuleMesh" id=1]
+mid_height = 1.75
+
+[sub_resource type="CapsuleShape" id=2]
+height = 1.75
+
+[sub_resource type="ConvexPolygonShape" id=5]
+points = PoolVector3Array( -2, 1, -1, 0, 0.3, -0.4, -2, 1, 1, 0, 0.3, 0.4, 0, 0.3, 0.4, 0, 0, 0.4, -2, 1, 1, -2, 0, 1, -2, 1, 1, -2, 0, 1, -2, 1, -1, -2, 0, -1, 0, 0, -0.4, -2, 0, -1, 0, 0, 0.4, -2, 0, 1, -2, 1, -1, -2, 0, -1, 0, 0.3, -0.4, 0, 0, -0.4, 0, 0.3, -0.4, 0, 0, -0.4, 0, 0.3, 0.4, 0, 0, 0.4 )
+
+[sub_resource type="CylinderMesh" id=4]
+height = 0.5
+
+[node name="Prototype" type="Spatial"]
+
+[node name="GroundTile" parent="." instance=ExtResource( 1 )]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, -1, 0 )
+
+[node name="GroundTile2" parent="." instance=ExtResource( 1 )]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 20, -1, 0 )
+
+[node name="GroundTile3" parent="." instance=ExtResource( 1 )]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 40, -1, 0 )
+
+[node name="GroundTile4" parent="." instance=ExtResource( 1 )]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, -1, -20 )
+
+[node name="GroundTile5" parent="." instance=ExtResource( 1 )]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 20, -1, -20 )
+
+[node name="GroundTile6" parent="." instance=ExtResource( 1 )]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 40, -1, -20 )
+
+[node name="GroundTile7" parent="." instance=ExtResource( 1 )]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, -1, 20 )
+
+[node name="GroundTile8" parent="." instance=ExtResource( 1 )]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 20, -1, 20 )
+
+[node name="GroundTile9" parent="." instance=ExtResource( 1 )]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 40, -1, 20 )
+
+[node name="LeafSpawner" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 8, -1 )
+script = ExtResource( 3 )
+maple_leaf = ExtResource( 6 )
+num_depth = 12
+num_height = 5
+num_width = 12
+
+[node name="CameraPivot" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 5 )
+script = ExtResource( 4 )
+rotation_speed = 5.0
+
+[node name="Camera" type="Camera" parent="CameraPivot"]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -15, 4, 0 )
+
+[node name="Player" type="KinematicBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 31.6, 0.4, 0 )
+script = ExtResource( 5 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Player"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.75, 0 )
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="Player"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.75, 0 )
+shape = SubResource( 2 )
+disabled = true
+
+[node name="Blower" type="Spatial" parent="Player"]
+
+[node name="RepulsionArea" type="Area" parent="Player/Blower"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -1.4, 0 )
+collision_layer = 0
+collision_mask = 2
+script = ExtResource( 2 )
+radius = 3.0
+max_repulsion = 1.0
+
+[node name="CollisionShape" type="CollisionShape" parent="Player/Blower/RepulsionArea"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1, 0 )
+shape = SubResource( 5 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="Player/Blower"]
+transform = Transform( 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, -2, 1.4, 0 )
+mesh = SubResource( 4 )
+material/0 = null
