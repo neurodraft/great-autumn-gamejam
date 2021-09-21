@@ -22,10 +22,33 @@ func _physics_process(delta):
 		dir += -cam_xform.basis[0]
 	if (Input.is_action_pressed("move_right")):
 		dir += cam_xform.basis[0]
-	if (Input.is_action_pressed("rotate_right")):
-		($Blower as Spatial).rotate_y(-5 * delta)
-	if (Input.is_action_pressed("rotate_left")):
-		($Blower as Spatial).rotate_y(5 * delta)
+		
+	var cam = get_viewport().get_camera()
+	var mouse_pos = get_viewport().get_mouse_position()
+	
+	var ray_origin = cam.project_ray_origin(mouse_pos)
+	var ray_normal = cam.project_ray_normal(mouse_pos)
+	
+	$RayCast.global_transform.origin = ray_origin
+	$RayCast.set_cast_to(ray_normal * 50)
+	
+	#$Raycast.force_raycast_update()
+	
+	if $RayCast.is_colliding():
+		var collision_point = $RayCast.get_collision_point()
+		
+		self.look_at(Vector3(collision_point.x, self.translation.y, collision_point.z), Vector3.UP)
+		#var distance = ray_origin.distance_to(collision_point)
+
+
+
+
+#	(self as Spatial).look_at(direction)
+
+#	if (Input.is_action_pressed("rotate_right")):
+#		(self as Spatial).rotate_y(-5 * delta)
+#	if (Input.is_action_pressed("rotate_left")):
+#		(self as Spatial).rotate_y(5 * delta)
 	
 	dir.y = 0
 	dir = dir.normalized()
@@ -48,4 +71,3 @@ func _physics_process(delta):
 	vel.z = hvel.z
 	
 	var motion = move_and_slide(vel)
-	
